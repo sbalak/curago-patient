@@ -2,8 +2,8 @@
 {
     public interface IAppointmentService
     {
-        Task GetDates();
-        Task GetAvailability(int staffId, DateTime date, string slot);
+        Task<List<DateModel>> GetDates();
+        Task<List<SlotModel>> GetAvailability(int staffId, DateTime date);
         Task Book(int staffId, DateTime date, TimeOnly start); 
     }
 }

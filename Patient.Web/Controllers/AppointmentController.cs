@@ -15,15 +15,15 @@ namespace Patient.Web.Controllers
         }
 
         [HttpGet("Dates")]
-        public async Task Dates()
+        public async Task<List<DateModel>> Dates()
         {
-            await _appointment.GetDates();
+            return await _appointment.GetDates();
         }
 
         [HttpGet("Availability")]
-        public Task Availability(int staffId, DateTime date, string slot)
+        public async Task<List<SlotModel>> Availability(int staffId, DateTime date)
         {
-            return _appointment.GetAvailability(staffId, date, slot);
+            return await _appointment.GetAvailability(staffId, date);
         }
 
         [HttpPost("Book")]
