@@ -12,6 +12,7 @@ namespace Patient.Data
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Speciality> Specialities { get; set; }
+        public DbSet<SpecialityToSymptom> SpecialityToSymptoms { get; set; }
         public DbSet<Symptom> Symptoms { get; set; }
         public DbSet<Staff> Staffs { get; set; }
         public DbSet<User> Users { get; set; }
