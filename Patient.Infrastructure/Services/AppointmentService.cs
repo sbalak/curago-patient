@@ -72,8 +72,8 @@ namespace Patient.Infrastructure
                             {
                                 Id = availableAppointment.Id,
                                 Slot = availableAppointment.Slot,
-                                Start = availableAppointment.Start.Hour.ToString(),
-                                End = availableAppointment.End.Hour.ToString(),
+                                Start = availableAppointment.Start.ToString("hh:mm"),
+                                End = availableAppointment.End.ToString("hh:mm"),
                                 IsAvailable = availableAppointment.IsAvailable
                             };
 
@@ -94,10 +94,98 @@ namespace Patient.Infrastructure
                 throw;
             }
         }
-
-        public Task Book(int staffId, DateTime date, TimeOnly start)
+        
+        public async Task<BookingModel> GetBooking(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var booking = await _context.Bookings
+                                            .Where(m => m.Id == id)
+                                            .Select(m => new BookingModel
+                                            {
+                                                AppointmentId = m.AppointmentId,
+                                                Staff = m.Appointment.Staff.FirstName + " " + m.Appointment.Staff.LastName,
+                                                Credentials = m.Appointment.Staff.PrimarySpeciality.CorrespondingRole,
+                                                Date = m.Appointment.Start.ToString("D"),
+                                                Time = m.Appointment.Start.ToString("hh:mm")
+                                            })
+                                            .FirstOrDefaultAsync();
+
+                return booking;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        
+        public async Task<List<BookingModel>> GetBookings(int userId)
+        {
+            try
+            {
+                var bookings = await _context.Bookings
+                                            .Where(m => m.UserId == userId)
+                                            .Select(m => new BookingModel
+                                            {
+                                                AppointmentId = m.AppointmentId,
+                                                Staff = m.Appointment.Staff.FirstName + " " + m.Appointment.Staff.LastName,
+                                                Credentials = m.Appointment.Staff.PrimarySpeciality.CorrespondingRole,
+                                                Date = m.Appointment.Start.ToString("D"),
+                                                Time = m.Appointment.Start.ToString("hh:mm")
+                                            })
+                                            .ToListAsync();
+
+                return bookings;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<BookingModel> Book(int userId, int appointmentId)
+        {
+            try
+            {
+                Booking newBooking = new Booking()
+                {
+                    UserId = userId,
+                    AppointmentId = appointmentId
+                };
+
+                _context.Bookings.Add(newBooking);
+                await _context.SaveChangesAsync();
+
+                var appointment = await _context.Appointments
+                                                .Where(m => m.Id == appointmentId)
+                                                .FirstOrDefaultAsync();
+                if (appointment != null)
+                {
+                    appointment.IsAvailable = false;
+
+                    _context.Appointments.Update(appointment);
+                    await _context.SaveChangesAsync();
+                }
+
+                var booking = await _context.Bookings
+                                            .Where(m => m.Id == newBooking.Id)
+                                            .Select(m => new BookingModel
+                                            {
+                                                AppointmentId = m.AppointmentId,
+                                                Staff = m.Appointment.Staff.FirstName + " " + m.Appointment.Staff.LastName,
+                                                Credentials = m.Appointment.Staff.PrimarySpeciality.CorrespondingRole,
+                                                Date = m.Appointment.Start.ToString("D"),
+                                                Time = m.Appointment.Start.ToString("hh:mm")
+                                            })
+                                            .FirstOrDefaultAsync();
+
+                return booking;
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
 }

@@ -26,10 +26,22 @@ namespace Patient.Web.Controllers
             return await _appointment.GetAvailability(staffId, date);
         }
 
-        [HttpPost("Book")]
-        public Task Book(int staffId, DateTime date, TimeOnly start)
+        [HttpGet("Booking")]
+        public async Task<BookingModel> Booking(int id)
         {
-            return _appointment.Book(staffId, date, start);
+            return await _appointment.GetBooking(id);
+        }
+
+        [HttpGet("Bookings")]
+        public async Task<List<BookingModel>> Bookings(int userId)
+        {
+            return await _appointment.GetBookings(userId);
+        }
+
+        [HttpPost("Book")]
+        public async Task<BookingModel> Book(int userId, int appointmentId)
+        {
+            return await _appointment.Book(userId, appointmentId);
         }
     }
 }

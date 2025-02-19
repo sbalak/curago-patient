@@ -28,4 +28,13 @@
         public string End { get; set; }
         public bool IsAvailable { get; set; }
     }
+
+    public class BookingModel
+    {
+        public int AppointmentId { get; set; }
+        public string Staff { get; set; }
+        public string Credentials { get; set; }
+        public string Date { get; set; }
+        public string Time { get; set; }
+    }
 }

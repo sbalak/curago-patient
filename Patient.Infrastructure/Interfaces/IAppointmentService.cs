@@ -4,6 +4,8 @@
     {
         Task<List<DateModel>> GetDates();
         Task<List<SlotModel>> GetAvailability(int staffId, DateTime date);
-        Task Book(int staffId, DateTime date, TimeOnly start); 
+        Task<BookingModel> GetBooking(int id);
+        Task<List<BookingModel>> GetBookings(int userId);
+        Task<BookingModel> Book(int userId, int appointmentId);
     }
 }
