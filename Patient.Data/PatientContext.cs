@@ -15,6 +15,8 @@ namespace Patient.Data
         public DbSet<SpecialityToSymptom> SpecialityToSymptoms { get; set; }
         public DbSet<Symptom> Symptoms { get; set; }
         public DbSet<Staff> Staffs { get; set; }
+        public DbSet<StaffEducation> StaffEducations { get; set; }
+        public DbSet<StaffIdentifier> StaffIdentifiers { get; set; }
         public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
